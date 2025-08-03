@@ -52,3 +52,85 @@ Thumbs.db
 
 # Arquivos de dependências
 /node_modules/
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Docker
+.docker/
+
+# Kubernetes
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Arquivos de backup
+*~
+*.orig
+*.backup
+
+# Arquivos de configuração local
+application-local.properties
+application-local.yml
+bootstrap-local.properties
+bootstrap-local.yml
+
+# Certificates e chaves
+*.pem
+*.key
+*.crt
+*.jks
+*.p12
+
+# Bancos de dados locais
+*.db
+*.sqlite
+*.sqlite3
+
+# Coverage reports
+coverage/
+.nyc_output/
+*.lcov
+
+# Test results
+test-results/
+junit.xml
+TEST-*.xml
+
+# Generated documentation
+docs/build/
+site/
+
+# Cache directories
+.cache/
+.parcel-cache/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# ESLint cache
+.eslintcache
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
