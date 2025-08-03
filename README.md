@@ -95,54 +95,72 @@ config-server/
 ## 🚀 Como Executar
 
 ### Pré-requisitos
-- Java 17+
-- Maven 3.8+
-- Docker e Docker Compose (recomendado)
+- Docker e Docker Compose
+- Git
 
-### Execução com Docker Compose (Recomendado)
+### 🐳 Execução com Docker (Recomendado)
 
-1. **Clone o repositório:**
+#### Opção 1: Ambiente Completo (Mais Simples)
 ```bash
+# Clone o repositório
 git clone <repository-url>
 cd comprae-config-server
-```
 
-2. **Execute o ambiente completo:**
-```bash
-# Ambiente básico (PostgreSQL, Redis, Kafka + Config Server)
+# Execute todo o ambiente (PostgreSQL, Redis, Kafka + Config Server)
 docker-compose up -d
 
-# Com monitoramento (inclui Prometheus e Grafana)
-docker-compose --profile monitoring up -d
-```
-
-3. **Verifique se está funcionando:**
-```bash
+# Verifique se está funcionando
 curl http://localhost:8080/actuator/health
 ```
 
-### Execução Local (Desenvolvimento)
-
-1. **Configure o banco de dados local:**
+#### Opção 2: Apenas Infraestrutura + Aplicação Local
 ```bash
-# PostgreSQL
-docker run -d --name postgres \
-  -e POSTGRES_DB=configdb \
-  -e POSTGRES_USER=configuser \
-  -e POSTGRES_PASSWORD=configpass \
-  -p 5432:5432 postgres:15-alpine
-
-# Redis
-docker run -d --name redis -p 6379:6379 redis:7-alpine
-
-# Kafka (ou use docker-compose apenas para infraestrutura)
+# Execute apenas a infraestrutura
 docker-compose up -d postgres redis kafka zookeeper
-```
 
-2. **Execute a aplicação:**
-```bash
+# Execute a aplicação localmente
 cd config-server
 ./mvnw spring-boot:run
+```
+
+#### Opção 3: Com Monitoramento Completo
+```bash
+# Inclui Prometheus e Grafana
+docker-compose --profile monitoring up -d
+```
+
+### 🛑 Para Parar os Serviços
+```bash
+# Parar todos os containers
+docker-compose down
+
+# Parar e remover volumes (dados serão perdidos)
+docker-compose down -v
+```
+
+### 🎯 Scripts de Automação
+
+Para facilitar a execução, foram criados scripts automatizados:
+
+#### Windows (PowerShell)
+```powershell
+# Execução completa com Docker (RECOMENDADO)
+.\executar-docker.ps1
+
+# Execução em modo desenvolvimento (infraestrutura Docker + app local)
+.\executar-dev.ps1
+
+# Script completo com menu interativo
+.\start.ps1
+```
+
+#### Linux/Mac (Bash)
+```bash
+# Execução completa com Docker
+./start.sh docker
+
+# Menu interativo
+./start.sh
 ```
 
 ---
@@ -218,12 +236,17 @@ SPRING_PROFILES_ACTIVE=desenvolvimento
 
 ### Exemplos de Uso da API
 
-**Buscar uma configuração:**
+**🔍 Verificar se o servidor está funcionando:**
+```bash
+curl http://localhost:8080/actuator/health
+```
+
+**📋 Buscar uma configuração específica:**
 ```bash
 curl "http://localhost:8080/api/configuracao/database.url?namespace=comprae-api&ambiente=desenvolvimento"
 ```
 
-**Criar/atualizar configuração:**
+**➕ Criar/atualizar configuração:**
 ```bash
 curl -X POST http://localhost:8080/api/configuracao \
   -H "Content-Type: application/json" \
@@ -236,9 +259,19 @@ curl -X POST http://localhost:8080/api/configuracao \
   }'
 ```
 
-**Buscar histórico:**
+**📜 Buscar histórico de uma configuração:**
 ```bash
 curl "http://localhost:8080/api/configuracao/historico/database.url?namespace=comprae-api&ambiente=desenvolvimento"
+```
+
+**📊 Listar todos os namespaces:**
+```bash
+curl http://localhost:8080/api/configuracao/namespaces
+```
+
+**🌍 Listar todos os ambientes:**
+```bash
+curl http://localhost:8080/api/configuracao/ambientes
 ```
 
 ---
