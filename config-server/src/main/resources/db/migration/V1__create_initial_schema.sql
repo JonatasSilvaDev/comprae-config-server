@@ -56,22 +56,22 @@ CREATE TRIGGER trigger_atualizar_timestamp
     EXECUTE FUNCTION atualizar_timestamp_modificacao();
 
 -- Inserir dados de exemplo para teste
-INSERT INTO configuracoes (chave, valor, namespace, ambiente, descricao, usuario_alteracao) VALUES
-('database.url', 'jdbc:postgresql://localhost:5432/comprae_dev', 'comprae-api', 'desenvolvimento', 'URL do banco de dados de desenvolvimento', 'sistema'),
-('database.pool.tamanho', '10', 'comprae-api', 'desenvolvimento', 'Tamanho do pool de conexões do banco', 'sistema'),
-('cache.redis.host', 'localhost', 'comprae-api', 'desenvolvimento', 'Host do servidor Redis', 'sistema'),
-('cache.redis.porta', '6379', 'comprae-api', 'desenvolvimento', 'Porta do servidor Redis', 'sistema'),
-('api.timeout', '5000', 'comprae-api', 'desenvolvimento', 'Timeout das requisições da API em ms', 'sistema'),
-('feature.novo-checkout', 'true', 'comprae-frontend', 'desenvolvimento', 'Habilitar nova funcionalidade de checkout', 'sistema'),
+INSERT INTO configuracoes (chave, valor, namespace, ambiente, descricao) VALUES
+('database.url', 'jdbc:postgresql://localhost:5432/comprae_dev', 'comprae-api', 'desenvolvimento', 'URL do banco de dados de desenvolvimento'),
+('database.pool.tamanho', '10', 'comprae-api', 'desenvolvimento', 'Tamanho do pool de conexões do banco'),
+('cache.redis.host', 'localhost', 'comprae-api', 'desenvolvimento', 'Host do servidor Redis'),
+('cache.redis.porta', '6379', 'comprae-api', 'desenvolvimento', 'Porta do servidor Redis'),
+('api.timeout', '5000', 'comprae-api', 'desenvolvimento', 'Timeout das requisições da API em ms'),
+('feature.novo-checkout', 'true', 'comprae-frontend', 'desenvolvimento', 'Habilitar nova funcionalidade de checkout'),
 
-('database.url', 'jdbc:postgresql://prod-db:5432/comprae_prod', 'comprae-api', 'producao', 'URL do banco de dados de produção', 'sistema'),
-('database.pool.tamanho', '50', 'comprae-api', 'producao', 'Tamanho do pool de conexões do banco', 'sistema'),
-('cache.redis.host', 'redis-cluster', 'comprae-api', 'producao', 'Host do cluster Redis', 'sistema'),
-('cache.redis.porta', '6379', 'comprae-api', 'producao', 'Porta do cluster Redis', 'sistema'),
-('api.timeout', '10000', 'comprae-api', 'producao', 'Timeout das requisições da API em ms', 'sistema'),
-('feature.novo-checkout', 'false', 'comprae-frontend', 'producao', 'Habilitar nova funcionalidade de checkout', 'sistema'),
+('database.url', 'jdbc:postgresql://prod-db:5432/comprae_prod', 'comprae-api', 'producao', 'URL do banco de dados de produção'),
+('database.pool.tamanho', '50', 'comprae-api', 'producao', 'Tamanho do pool de conexões do banco'),
+('cache.redis.host', 'redis-cluster', 'comprae-api', 'producao', 'Host do cluster Redis'),
+('cache.redis.porta', '6379', 'comprae-api', 'producao', 'Porta do cluster Redis'),
+('api.timeout', '10000', 'comprae-api', 'producao', 'Timeout das requisições da API em ms'),
+('feature.novo-checkout', 'false', 'comprae-frontend', 'producao', 'Habilitar nova funcionalidade de checkout'),
 
-('notificacao.email.host', 'smtp.gmail.com', 'comprae-notificacao', 'desenvolvimento', 'Host do servidor de email', 'sistema'),
-('notificacao.email.porta', '587', 'comprae-notificacao', 'desenvolvimento', 'Porta do servidor de email', 'sistema'),
-('notificacao.email.host', 'smtp-prod.empresa.com', 'comprae-notificacao', 'producao', 'Host do servidor de email de produção', 'sistema'),
-('notificacao.email.porta', '587', 'comprae-notificacao', 'producao', 'Porta do servidor de email de produção', 'sistema');
+('notificacao.email.host', 'smtp.gmail.com', 'comprae-notificacao', 'desenvolvimento', 'Host do servidor de email'),
+('notificacao.email.porta', '587', 'comprae-notificacao', 'desenvolvimento', 'Porta do servidor de email'),
+('notificacao.email.host', 'smtp-prod.empresa.com', 'comprae-notificacao', 'producao', 'Host do servidor de email de produção'),
+('notificacao.email.porta', '587', 'comprae-notificacao', 'producao', 'Porta do servidor de email de produção');
