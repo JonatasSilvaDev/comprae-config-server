@@ -101,12 +101,18 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
-		<!-- Config Client SDK via JitPack -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Config Client SDK via Local Install (temporário) -->
 		<dependency>
 			<groupId>com.github.JonatasSilvaDev</groupId>
 			<artifactId>comprae-client-sdk</artifactId>
 			<version>1.0.0</version>
-		</dependency>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
@@ -114,6 +120,15 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<!-- Repositórios temporariamente removidos para usar versão local
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+	-->
 
 	<build>
 		<plugins>
