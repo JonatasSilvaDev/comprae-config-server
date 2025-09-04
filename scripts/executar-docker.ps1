@@ -11,11 +11,11 @@ if ($LASTEXITCODE -ne 0) {
 
 # Parar containers existentes
 Write-Host "Parando containers existentes..." -ForegroundColor Yellow
-docker-compose down 2>$null
+docker-compose -f ../docker-compose.yml down 2>$null
 
 # Iniciar containers
 Write-Host "Iniciando containers..." -ForegroundColor Cyan
-docker-compose up -d
+docker-compose -f ../docker-compose.yml up -d
 
 # Aguardar aplicacao
 Write-Host "Aguardando aplicacao..." -ForegroundColor Yellow
@@ -35,7 +35,7 @@ while ($elapsed -lt $timeout) {
             Write-Host "API: http://localhost:8080/api/configuracao" -ForegroundColor Cyan
             Write-Host "Swagger: http://localhost:8080/swagger-ui.html" -ForegroundColor Cyan
             Write-Host ""
-            docker-compose ps
+            docker-compose -f ../docker-compose.yml ps
             exit 0
         }
     } catch {
@@ -47,4 +47,4 @@ while ($elapsed -lt $timeout) {
 
 Write-Host ""
 Write-Host "Aplicacao demorou para responder. Verificando logs..." -ForegroundColor Yellow
-docker-compose logs config-server
+docker-compose -f ../docker-compose.yml logs config-server

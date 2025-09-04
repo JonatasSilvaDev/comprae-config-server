@@ -94,6 +94,17 @@ function Stop-Services {
     }
 }
 
+    # Parar serviços existentes
+    function Stop-Services {
+        Write-Status "Parando serviços existentes..."
+        try {
+            & "${PSScriptRoot}\infra.ps1" -Action down
+            Write-Success "Serviços parados"
+        } catch {
+            Write-Error "Erro ao parar serviços: $_"
+        }
+    }
+
 # Construir a aplicação
 function Build-Application {
     Write-Status "Construindo aplicação..."
@@ -113,6 +124,17 @@ function Build-Application {
         Set-Location ".."
     }
 }
+
+    # Construir a aplicação
+    function Build-Application {
+        Write-Status "Construindo aplicação..."
+        try {
+            & "${PSScriptRoot}\build-maven.ps1"
+            Write-Success "Aplicação construída com sucesso"
+        } catch {
+            Write-Error "Erro ao construir aplicação: $_"
+        }
+    }
 
 # Iniciar infraestrutura
 function Start-Infrastructure {
@@ -158,6 +180,17 @@ function Start-Infrastructure {
         return $false
     }
 }
+
+    # Iniciar infraestrutura
+    function Start-Infrastructure {
+        Write-Status "Iniciando infraestrutura (PostgreSQL, Redis, Kafka)..."
+        try {
+            & "${PSScriptRoot}\infra.ps1" -Action up
+            Write-Success "Infraestrutura inicializada"
+        } catch {
+            Write-Error "Erro ao iniciar infraestrutura: $_"
+        }
+    }
 
 # Iniciar aplicação
 function Start-Application {
@@ -232,6 +265,22 @@ function Show-Status {
     }
 }
 
+    # Mostrar status dos serviços
+    function Show-Status {
+        Write-Status "Status dos serviços:"
+        & "${PSScriptRoot}\infra.ps1" -Action status
+        Write-Host ""
+        Write-Status "URLs úteis:"
+        Write-Host "  🔗 Config Server: http://localhost:8080" -ForegroundColor White
+        Write-Host "  📚 API Documentation: http://localhost:8080/swagger-ui.html" -ForegroundColor White
+        Write-Host "  ❤️  Health Check: http://localhost:8080/actuator/health" -ForegroundColor White
+        Write-Host "  📊 Metrics: http://localhost:8080/actuator/metrics" -ForegroundColor White
+        Write-Host "  🗄️  PostgreSQL: localhost:5432 (configuser/configpass)" -ForegroundColor White
+        Write-Host "  🚀 Redis: localhost:6379" -ForegroundColor White
+        Write-Host "  📨 Kafka: localhost:9092" -ForegroundColor White
+        # ...existing code for prometheus/grafana...
+    }
+
 # Executar testes
 function Invoke-Tests {
     Write-Status "Executando testes..."
@@ -252,6 +301,17 @@ function Invoke-Tests {
     }
 }
 
+    # Executar testes
+    function Invoke-Tests {
+        Write-Status "Executando testes..."
+        try {
+            & "${PSScriptRoot}\build-maven.ps1" -Test
+            Write-Success "Testes executados com sucesso"
+        } catch {
+            Write-Error "Erro ao executar testes: $_"
+        }
+    }
+
 # Limpar ambiente
 function Clear-Environment {
     Write-Status "Limpando ambiente..."
@@ -263,6 +323,18 @@ function Clear-Environment {
         Write-Error "Erro ao limpar ambiente: $_"
     }
 }
+
+    # Limpar ambiente
+    function Clear-Environment {
+        Write-Status "Limpando ambiente..."
+        try {
+            & "${PSScriptRoot}\infra.ps1" -Action down
+            docker system prune -f
+            Write-Success "Ambiente limpo"
+        } catch {
+            Write-Error "Erro ao limpar ambiente: $_"
+        }
+    }
 
 # Menu principal
 function Show-Menu {

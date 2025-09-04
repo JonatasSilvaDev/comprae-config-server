@@ -41,22 +41,29 @@ config-server/
 │   ├── main/
 │   │   ├── java/com/configsystem/server/
 │   │   │   ├── ConfigServerApplication.java
-│   │   │   ├── config/              # Configurações do Spring
-│   │   │   ├── controlador/         # Controllers REST
-│   │   │   ├── dto/                 # DTOs para API
-│   │   │   ├── entidade/            # Entidades JPA
-│   │   │   ├── evento/              # Eventos Kafka
-│   │   │   ├── excecao/             # Exceções customizadas
-│   │   │   ├── repositorio/         # Repositórios JPA
-│   │   │   └── servico/             # Serviços de negócio
+#### Opção 1: Ambiente Completo (Mais Simples)
+```bash
+# Clone o repositório
+git clone <repository-url>
+cd comprae-config-server
+
+# Execute todo o ambiente (PostgreSQL, Redis, Kafka + Config Server)
+./scripts/executar-docker.sh   # Linux/Mac
+# ou
+./scripts/executar-docker.ps1  # Windows
+
 │   │   └── resources/
 │   │       ├── application.properties
 │   │       ├── application-docker.properties
 │   │       └── db/migration/        # Scripts Flyway
 │   └── test/                        # Testes unitários e integração
 ├── Dockerfile                       # Container Docker
-├── pom.xml                          # Dependências Maven
-└── README.md
+#### Opção 2: Apenas Infraestrutura + Aplicação Local
+```bash
+# Execute apenas a infraestrutura
+./scripts/infra.sh up   # Linux/Mac
+# ou
+./scripts/infra.ps1 -Action up   # Windows
 ```
 
 ---
@@ -71,8 +78,12 @@ config-server/
 - **Spring Cache** - Sistema de cache
 - **Spring Kafka** - Mensageria assíncrona
 
-### Banco de Dados
-- **PostgreSQL** - Banco de dados principal
+### 🛑 Para Parar os Serviços
+```bash
+# Parar todos os containers
+./scripts/infra.sh down   # Linux/Mac
+# ou
+./scripts/infra.ps1 -Action down   # Windows
 - **Flyway** - Migração e versionamento do banco
 - **Redis** - Cache distribuído
 
@@ -138,30 +149,53 @@ docker-compose down
 docker-compose down -v
 ```
 
-### 🎯 Scripts de Automação
 
-Para facilitar a execução, foram criados scripts automatizados:
+### 🎯 Scripts de Automação (Multiplataforma)
+
+Scripts prontos para Windows (PowerShell) e Linux/Mac (Bash) estão disponíveis em `scripts/`.
 
 #### Windows (PowerShell)
 ```powershell
-# Execução completa com Docker (RECOMENDADO)
-.\executar-docker.ps1
+# Execução completa com Docker (recomendado)
+.\scripts\executar-docker.ps1
 
 # Execução em modo desenvolvimento (infraestrutura Docker + app local)
-.\executar-dev.ps1
+.\scripts\executar-dev.ps1
 
-# Script completo com menu interativo
-.\start.ps1
+# Menu interativo e orquestração completa
+.\scripts\start.ps1
+
+# Build Maven ou Docker isolado
+.\scripts\build-maven.ps1
+.\scripts\build-docker.ps1
+
+# Popular configurações do Produto Service
+.\scripts\popular-configuracoes-produto.ps1
 ```
 
 #### Linux/Mac (Bash)
 ```bash
-# Execução completa com Docker
-./start.sh docker
+# Execução completa com Docker (recomendado)
+./scripts/executar-docker.sh
 
-# Menu interativo
-./start.sh
+# Execução em modo desenvolvimento (infraestrutura Docker + app local)
+./scripts/executar-dev.sh
+
+# Menu interativo e orquestração completa
+./scripts/start.sh
+
+# Build Maven ou Docker isolado
+./scripts/build-maven.sh
+./scripts/build-docker.sh
+
+# Popular configurações do Produto Service
+./scripts/popular-configuracoes-produto.sh
 ```
+
+#### Scripts auxiliares
+- `infra.ps1` / `infra.sh`: Centralizam validação e controle da infraestrutura Docker (subir, parar, status).
+
+> Todos os scripts podem ser executados a partir da raiz do projeto.
 
 ---
 

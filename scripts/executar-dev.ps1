@@ -44,37 +44,13 @@ try {
     exit 1
 }
 
-# Parar containers existentes
+
+# Subir infraestrutura usando script auxiliar
 Write-Host "🛑 Parando containers existentes..." -ForegroundColor Yellow
-docker-compose down 2>$null
+& "${PSScriptRoot}\infra.ps1" -Action down
 
-# Iniciar apenas infraestrutura
 Write-Host "🏗️ Iniciando infraestrutura (PostgreSQL, Redis, Kafka)..." -ForegroundColor Cyan
-docker-compose up -d postgres redis kafka zookeeper
-
-Write-Host "⏳ Aguardando infraestrutura ficar pronta..." -ForegroundColor Yellow
-Start-Sleep -Seconds 15
-
-# Verificar se PostgreSQL está pronto
-$attempts = 0
-$maxAttempts = 30
-do {
-    $attempts++
-    try {
-        $pgReady = docker exec config-server-postgres pg_isready -U configuser -d configdb 2>$null
-        if ($pgReady -match "accepting connections") {
-            Write-Host "✅ PostgreSQL pronto" -ForegroundColor Green
-            break
-        }
-    } catch { }
-    
-    if ($attempts -ge $maxAttempts) {
-        Write-Host "❌ PostgreSQL não ficou pronto" -ForegroundColor Red
-        exit 1
-    }
-    
-    Start-Sleep -Seconds 2
-} while ($true)
+& "${PSScriptRoot}\infra.ps1" -Action up
 
 Write-Host ""
 Write-Host "🚀 Infraestrutura pronta! Agora execute a aplicação:" -ForegroundColor Green
@@ -86,7 +62,7 @@ Write-Host "📊 Será disponível em:" -ForegroundColor Cyan
 Write-Host "   • http://localhost:8080/actuator/health" -ForegroundColor Gray
 Write-Host "   • http://localhost:8080/swagger-ui.html" -ForegroundColor Gray
 Write-Host ""
-Write-Host "🛑 Para parar infraestrutura: docker-compose stop" -ForegroundColor Yellow
+Write-Host "🛑 Para parar infraestrutura: .\scripts\infra.ps1 -Action down" -ForegroundColor Yellow
 
 # Opcional: executar automaticamente
 $choice = Read-Host "Deseja executar a aplicação automaticamente? (s/N)"
