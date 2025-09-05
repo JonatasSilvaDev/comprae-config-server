@@ -1,7 +1,7 @@
 # Script para build da imagem Docker do comprae-config-server
 
 try {
-    Push-Location "..\\config-server"
+    Push-Location "..\config-server"
     Write-Host "Navegando para o diretório config-server..." -ForegroundColor Blue
 } catch {
     Write-Host "❌ Não foi possível navegar para o diretório config-server" -ForegroundColor Red

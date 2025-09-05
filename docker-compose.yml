@@ -7,8 +7,8 @@ services:
     container_name: config-server-postgres
     environment:
       POSTGRES_DB: configdb
-      POSTGRES_USER: configuser
-      POSTGRES_PASSWORD: configpass
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=pt_BR.UTF-8"
     ports:
       - "5432:5432"
@@ -75,9 +75,9 @@ services:
     environment:
       # Configurações do banco de dados
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/configdb
-      SPRING_DATASOURCE_USERNAME: configuser
-      SPRING_DATASOURCE_PASSWORD: configpass
-      
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+
       # Configurações do Redis
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
@@ -88,7 +88,7 @@ services:
       # Configurações de segurança
       USERNAME: admin
       PASSWORD: admin123
-      
+
       # Configurações de ambiente
       SPRING_PROFILES_ACTIVE: docker
       

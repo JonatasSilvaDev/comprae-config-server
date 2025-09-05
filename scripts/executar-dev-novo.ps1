@@ -1,33 +1,5 @@
 # Script para Desenvolvimento Local (apenas infraestrutura no Docker)
 # Usa Docker para infraestrutura e executa a aplicacao localmente com Maven
-<#
-Script para Desenvolvimento Local (apenas infraestrutura no Docker)
-Usa Docker para infraestrutura e executa a aplicacao localmente com Maven
-# Carrega variáveis do arquivo .env automaticamente
-#>
-
-# Carregar variáveis do .env
-$envFile = Join-Path $PSScriptRoot '..\.env'
-if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
-        if ($_ -match '^[A-Za-z_][A-Za-z0-9_]*=') {
-            $parts = $_ -split '=', 2
-            $name = $parts[0].Trim()
-            $value = $parts[1].Trim()
-            # Substitui variáveis referenciadas (${VAR})
-            while ($value -match '\$\{([A-Za-z_][A-Za-z0-9_]*)\}') {
-                $varName = $matches[1]
-                $varValue = [Environment]::GetEnvironmentVariable($varName)
-                if ($null -ne $varValue) {
-                    $value = $value -replace "\$\{$varName\}", $varValue
-                } else {
-                    $value = $value -replace "\$\{$varName\}", ''
-                }
-            }
-            Set-Item -Path "Env:$name" -Value $value
-        }
-    }
-}
 
 Write-Host "Comprae Config Server - Modo Desenvolvimento" -ForegroundColor Blue
 Write-Host "================================================" -ForegroundColor Blue
