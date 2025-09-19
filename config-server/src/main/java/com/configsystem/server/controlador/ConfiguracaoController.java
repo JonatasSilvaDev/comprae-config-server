@@ -16,20 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/configuracoes")
 public class ConfiguracaoController {
 
 	@Autowired
 	private ServicoConfiguracao servico;
 
 	// Listar todas as configurações
-	@GetMapping("/v1/configuracoes")
+	@GetMapping
 	public List<Configuracao> listarTodasConfiguracoes() {
 		return servico.listarTodasConfiguracoes();
 	}
 
 	// Buscar configuração por chave
-	@GetMapping("/v1/configuracoes/{chave}")
+	@GetMapping("/{chave}")
 	public Configuracao buscarConfiguracao(@PathVariable String chave) {
 		return servico.buscarPorTexto(chave);
 	}
@@ -41,7 +41,7 @@ public class ConfiguracaoController {
 	// }
 
 	// Criar nova configuração
-	@PostMapping("/v1/configuracoes")
+	@PostMapping
 	public void criarConfiguracao(@RequestBody RequisicaoConfiguracao configuracao) {
 		servico.salvarConfiguracao(
 				configuracao.chave(),
@@ -52,7 +52,7 @@ public class ConfiguracaoController {
 	}
 
 	// Atualizar uma configuração existente
-	@PutMapping("/v1/configuracoes/{id}")
+	@PutMapping("/{id}")
 	public void atualizarConfiguracao(@PathVariable Long id, @RequestBody RequisicaoConfiguracao configuracao) {
 		servico.salvarConfiguracao(
 				configuracao.chave(),
@@ -63,7 +63,7 @@ public class ConfiguracaoController {
 	}
 
 	//deletar uma configuração
-	@DeleteMapping("/v1/configuracoes/{id}")
+	@DeleteMapping("/{id}")
 	public void deletarConfiguracao(@PathVariable String chave, @RequestParam String namespace, @RequestParam String ambiente) {
 		servico.removerConfiguracao(chave, namespace, ambiente);
 	}
@@ -102,7 +102,7 @@ public class ConfiguracaoController {
     private String ambiente;
 
 	// depois não esquecer de ajustar essa nojera
-	@GetMapping("/configs/default/${SPRING_PROFILES_ACTIVE}/map")
+	@GetMapping("/default/${SPRING_PROFILES_ACTIVE}/map")
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> buscarMapaConfiguracoes() {
 		try {
@@ -112,5 +112,4 @@ public class ConfiguracaoController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
 }
