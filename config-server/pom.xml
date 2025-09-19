@@ -109,16 +109,11 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- Config Client SDK via Local Install (temporário) -->
-		<!-- <dependency>
+		 <dependency>
 			<groupId>com.github.JonatasSilvaDev</groupId>
 			<artifactId>comprae-client-sdk</artifactId>
-			<version>1.0.3</version>
-		</dependency> -->
-		<dependency>
-			<groupId>com.configsystem</groupId>
-			<artifactId>comprae-client-sdk</artifactId>
-			<version>1.0.3-SNAPSHOT</version>
-		</dependency>
+			<version>1.0.2</version>
+		</dependency>		
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>kafka</artifactId>
@@ -127,13 +122,14 @@
 	</dependencies>
 
 	<!-- Repositórios temporariamente removidos para usar versão local
+	
+	-->
 	<repositories>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
-	-->
 	
 	<build>
 		<plugins>
