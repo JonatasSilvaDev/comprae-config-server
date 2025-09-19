@@ -55,7 +55,7 @@ public interface RepositorioConfiguracao extends JpaRepository<Configuracao, Lon
      * Busca configurações que contenham um texto específico na chave ou valor
      */
     @Query("SELECT c FROM Configuracao c WHERE (LOWER(c.chave) LIKE LOWER(CONCAT('%', :texto, '%')) OR LOWER(c.valor) LIKE LOWER(CONCAT('%', :texto, '%'))) AND c.ativo = true ORDER BY c.namespace, c.ambiente, c.chave")
-    List<Configuracao> buscarPorTexto(@Param("texto") String texto);
+    Configuracao buscarPorTexto(@Param("texto") String texto);
 
     /**
      * Conta o número de configurações por namespace
