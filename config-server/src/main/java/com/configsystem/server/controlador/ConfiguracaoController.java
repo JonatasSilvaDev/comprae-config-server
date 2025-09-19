@@ -101,12 +101,17 @@ public class ConfiguracaoController {
     @Value("${SPRING_PROFILES_ACTIVE}")
     private String ambiente;
 
-	// depois não esquecer de ajustar essa nojera
-	@GetMapping("/default/${SPRING_PROFILES_ACTIVE}/map")
+	@Value("${SPRING_NAMESPACE:default}")
+    private String namespace;
+
+	// Endpoint que o SDK espera: /api/v1/configuracoes/default/dev/map
+	@GetMapping("/{namespace}/{ambiente}/map")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> buscarMapaConfiguracoes() {
+	public ResponseEntity<Map<String, String>> buscarMapaConfiguracoes(
+			@PathVariable String namespace, 
+			@PathVariable String ambiente) {
 		try {
-			Map<String, String> mapa = servico.buscarTodasConfiguracoes("default", ambiente);
+			Map<String, String> mapa = servico.buscarTodasConfiguracoes(namespace, ambiente);
 			return ResponseEntity.ok(mapa);
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
