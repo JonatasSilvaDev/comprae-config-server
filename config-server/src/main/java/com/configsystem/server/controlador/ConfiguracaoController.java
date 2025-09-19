@@ -1,122 +1,116 @@
 package com.configsystem.server.controlador;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import com.configsystem.server.dto.RequisicaoConfiguracao;
+import com.configsystem.server.entidade.Configuracao;
+import com.configsystem.server.servico.ServicoConfiguracao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
+import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
-/**
- * Controlador para gerenciar configurações centralizadas do Config Server
- */
+import org.springframework.data.redis.core.RedisTemplate;
+import java.util.Set;
+import java.util.HashMap;
+
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/configuracoes")
-@Tag(name = "Config Server", description = "API para gerenciar configurações centralizadas")
+@RequestMapping("/api")
 public class ConfiguracaoController {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfiguracaoController.class);
+	@Autowired
+	private ServicoConfiguracao servico;
 
-    @Operation(summary = "Status do Config Server", description = "Retorna o status do servidor de configuração")
-    @GetMapping("/status")
-    public ResponseEntity<Map<String, Object>> statusConfigServer() {
-        log.info("Verificando status do Config Server");
-        
-        Map<String, Object> status = new HashMap<>();
-        status.put("servico", "Config Server");
-        status.put("status", "UP");
-        status.put("versao", "1.0.0");
-        status.put("descricao", "Servidor de configuração centralizada do Compraê");
-        status.put("porta", 8888);
-        status.put("timestamp", System.currentTimeMillis());
-        
-        return ResponseEntity.ok(status);
-    }
+	// Listar todas as configurações
+	@GetMapping("/v1/configuracoes")
+	public List<Configuracao> listarTodasConfiguracoes() {
+		return servico.listarTodasConfiguracoes();
+	}
 
-    @Operation(summary = "Informações do Config Server", description = "Retorna informações básicas sobre o servidor")
-    @GetMapping("/info")
-    public ResponseEntity<Map<String, Object>> informacoesConfigServer() {
-        log.info("Solicitação para informações do Config Server");
-        
-        Map<String, Object> info = new HashMap<>();
-        info.put("nome", "Compraê Config Server");
-        info.put("descricao", "Servidor centralizado de configurações para o ecossistema Compraê");
-        info.put("versao", "1.0.0");
-        info.put("ambiente", "desenvolvimento");
-        info.put("funcionalidades", new String[]{
-            "Gerenciamento centralizado de configurações",
-            "API REST para CRUD de configurações",
-            "Suporte a múltiplos ambientes",
-            "Cache de configurações",
-            "Versionamento de configurações"
-        });
-        
-        return ResponseEntity.ok(info);
-    }
+	// Buscar configuração por chave
+	@GetMapping("/v1/configuracoes/{chave}")
+	public Configuracao buscarConfiguracao(@PathVariable String chave) {
+		return servico.buscarPorTexto(chave);
+	}
 
-    @Operation(summary = "Health Check", description = "Verifica se o Config Server está funcionando corretamente")
-    @GetMapping("/health")
-    public ResponseEntity<Map<String, Object>> healthCheck() {
-        log.info("Health check do Config Server");
-        
-        Map<String, Object> health = new HashMap<>();
-        
-        try {
-            // Verificações básicas do sistema
-            boolean sistemaOk = true;
-            boolean bancoOk = true; // Aqui seria uma verificação real do banco
-            boolean cacheOk = true; // Aqui seria uma verificação real do cache
-            
-            boolean healthy = sistemaOk && bancoOk && cacheOk;
-            
-            health.put("status", healthy ? "UP" : "DOWN");
-            health.put("sistema", sistemaOk ? "OK" : "ERROR");
-            health.put("banco_dados", bancoOk ? "OK" : "ERROR");
-            health.put("cache", cacheOk ? "OK" : "ERROR");
-            health.put("timestamp", System.currentTimeMillis());
-            
-            return healthy ? ResponseEntity.ok(health) : ResponseEntity.status(503).body(health);
-            
-        } catch (Exception e) {
-            log.error("Erro no health check do Config Server", e);
-            health.put("status", "DOWN");
-            health.put("error", e.getMessage());
-            return ResponseEntity.status(503).body(health);
-        }
-    }
+	// // Buscar configuração por ID
+	// @GetMapping("/v1/configuracoes/id/{id}")
+	// public Configuracao buscarConfiguracaoPorId(@PathVariable Long id) {
+	// 	return servico.buscarPorId(id);
+	// }
 
-    @Operation(summary = "Listar namespaces", description = "Lista todos os namespaces de configuração disponíveis")
-    @GetMapping("/namespaces")
-    public ResponseEntity<Map<String, Object>> listarNamespaces() {
-        log.info("Listando namespaces disponíveis");
-        
-        Map<String, Object> resposta = new HashMap<>();
-        resposta.put("namespaces", new String[]{
-            "comprae-produto-service",
-            "comprae-usuario-service", 
-            "comprae-pedido-service",
-            "comprae-pagamento-service",
-            "comprae-notification-service"
-        });
-        resposta.put("total", 5);
-        resposta.put("descricao", "Namespaces de configuração do ecossistema Compraê");
-        
-        return ResponseEntity.ok(resposta);
-    }
+	// Criar nova configuração
+	@PostMapping("/v1/configuracoes")
+	public void criarConfiguracao(@RequestBody RequisicaoConfiguracao configuracao) {
+		servico.salvarConfiguracao(
+				configuracao.chave(),
+				configuracao.valor(),
+				configuracao.namespace(),
+				configuracao.ambiente(),
+				configuracao.descricao());
+	}
 
-    @Operation(summary = "Listar ambientes", description = "Lista todos os ambientes disponíveis")
-    @GetMapping("/ambientes")
-    public ResponseEntity<Map<String, Object>> listarAmbientes() {
-        log.info("Listando ambientes disponíveis");
-        
-        Map<String, Object> resposta = new HashMap<>();
-        resposta.put("ambientes", new String[]{"dev", "test", "prod"});
-        resposta.put("ativo", "dev");
-        resposta.put("descricao", "Ambientes de configuração disponíveis");
-        
-        return ResponseEntity.ok(resposta);
-    }
+	// Atualizar uma configuração existente
+	@PutMapping("/v1/configuracoes/{id}")
+	public void atualizarConfiguracao(@PathVariable Long id, @RequestBody RequisicaoConfiguracao configuracao) {
+		servico.salvarConfiguracao(
+				configuracao.chave(),
+				configuracao.valor(),
+				configuracao.namespace(),
+				configuracao.ambiente(),
+				configuracao.descricao());
+	}
+
+	//deletar uma configuração
+	@DeleteMapping("/v1/configuracoes/{id}")
+	public void deletarConfiguracao(@PathVariable String chave, @RequestParam String namespace, @RequestParam String ambiente) {
+		servico.removerConfiguracao(chave, namespace, ambiente);
+	}
+
+	// Buscar configuração por ID
+//	@GetMapping("/{id}")
+//	public ResponseEntity<Configuracao> buscarPorId(@PathVariable Long id) {
+//		Optional<Configuracao> config = repositorioConfiguracao.findById(id);
+//		return config.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//	}
+//
+
+//
+//	// Atualizar configuração existente
+//	@PutMapping("/{id}")
+//	public ResponseEntity<Configuracao> atualizar(@PathVariable Long id, @RequestBody Configuracao configuracao) {
+//		if (!repositorioConfiguracao.existsById(id)) {
+//			return ResponseEntity.notFound().build();
+//		}
+//		configuracao.setId(id);
+//		Configuracao atualizada = repositorioConfiguracao.save(configuracao);
+//		return ResponseEntity.ok(atualizada);
+//	}
+//
+//	// Deletar configuração
+//	@DeleteMapping("/{id}")
+//	public ResponseEntity<Void> deletar(@PathVariable Long id) {
+//		if (!repositorioConfiguracao.existsById(id)) {
+//			return ResponseEntity.notFound().build();
+//		}
+//		repositorioConfiguracao.deleteById(id);
+//		return ResponseEntity.noContent().build();
+//	}
+
+    @Value("${SPRING_PROFILES_ACTIVE}")
+    private String ambiente;
+
+	// depois não esquecer de ajustar essa nojera
+	@GetMapping("/configs/default/${SPRING_PROFILES_ACTIVE}/map")
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> buscarMapaConfiguracoes() {
+		try {
+			Map<String, String> mapa = servico.buscarTodasConfiguracoes("default", ambiente);
+			return ResponseEntity.ok(mapa);
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 }
