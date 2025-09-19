@@ -72,6 +72,7 @@ services:
       - kafka
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       # Configurações do banco de dados
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/configdb
@@ -93,7 +94,7 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       
       # Configurações de JVM
-      JAVA_OPTS: "-Xmx512m -Xms256m -XX:+UseG1GC"
+      JAVA_OPTS: "-Xmx512m -Xms256m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     networks:
       - config-network
     restart: unless-stopped
