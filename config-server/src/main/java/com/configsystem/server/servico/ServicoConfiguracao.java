@@ -47,6 +47,8 @@ public class ServicoConfiguracao {
             ));
     }
 
+
+
     /**
      * Salva ou atualiza uma configuração
      */
@@ -156,10 +158,10 @@ public class ServicoConfiguracao {
     }
 
     /**
-     * Busca configurações por texto (chave ou valor)
+     * Busca configurações por chave
      */
-    public List<Configuracao> buscarPorTexto(String texto) {
-        return repositorioConfiguracao.buscarPorTexto(texto);
+    public Configuracao buscarPorTexto(String chave) {
+        return repositorioConfiguracao.buscarPorTexto(chave);
     }
 
     /**
