@@ -1,10 +1,5 @@
-# Script para Desenvolvimento Local (apenas infraestrutura no Docker)
+# Script para Desenvolvimento Local
 # Usa Docker para infraestrutura e executa a aplicacao localmente com Maven
-<#
-Script para Desenvolvimento Local (apenas infraestrutura no Docker)
-Usa Docker para infraestrutura e executa a aplicacao localmente com Maven
-# Carrega variáveis do arquivo .env automaticamente
-#>
 
 # Carregar variáveis do .env
 $envFile = Join-Path $PSScriptRoot '..\.env'
