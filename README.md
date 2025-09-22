@@ -77,6 +77,7 @@ cd comprae-config-server
 - **Spring Security** - Autenticação e autorização
 - **Spring Cache** - Sistema de cache
 - **Spring Kafka** - Mensageria assíncrona
+- **Comprae Client SDK v1.1.1** - SDK para comunicação entre serviços com cache inteligente e validação aprimorada
 
 ### 🛑 Para Parar os Serviços
 ```bash
@@ -100,6 +101,22 @@ cd comprae-config-server
 - **JUnit 5** - Framework de testes
 - **Testcontainers** - Testes de integração
 - **Spring Security Test** - Testes de segurança
+
+### 📦 SDK Client v1.1.1
+O serviço utiliza o **Comprae Client SDK** para comunicação padronizada entre os microserviços:
+
+#### 🚀 Principais Funcionalidades
+- **Cache Inteligente**: Sistema de cache multi-camadas com TTL configurável
+- **Validação Avançada**: Validação automática de requests e responses
+- **Métricas de Performance**: Monitoramento automático de latência e throughput
+- **Rate Limiting**: Controle de taxa de requisições para proteção dos serviços
+- **Circuit Breaker**: Proteção contra falhas em cascata
+- **Retry Automático**: Tentativas automáticas com backoff exponencial
+
+#### 📊 Endpoints de Monitoramento
+- `/actuator/cache` - Estatísticas do cache
+- `/actuator/metrics/sdk` - Métricas específicas do SDK
+- `/actuator/health/sdk` - Status de saúde do SDK
 
 ---
 
@@ -150,36 +167,35 @@ docker-compose down -v
 ```
 
 
-### 🎯 Scripts de Automação (Multiplataforma)
+### 🎯 Scripts de Gerenciamento
 
-Scripts prontos para Windows (PowerShell) e Linux/Mac (Bash) estão disponíveis em `scripts/`.
+#### Script Principal - Interface Unificada
+```bash
+# Linux/Mac
+./manage.sh [comando]
 
-#### Windows (PowerShell)
-```powershell
-# Execução completa com Docker (recomendado)
-.\scripts\executar-docker.ps1
-
-# Execução em modo desenvolvimento (infraestrutura Docker + app local)
-.\scripts\executar-dev.ps1
-
-# Menu interativo e orquestração completa
-.\scripts\start.ps1
-
-# Build Maven ou Docker isolado
-.\scripts\build-maven.ps1
-.\scripts\build-docker.ps1
-
-# Popular configurações do Produto Service
-.\scripts\popular-configuracoes-produto.ps1
+# Windows  
+.\manage.ps1 [comando]
 ```
 
-#### Linux/Mac (Bash)
-```bash
-# Execução completa com Docker (recomendado)
-./scripts/executar-docker.sh
+**Comandos disponíveis:**
+- `build` - Compila o projeto (Maven)
+- `docker` - Constrói imagem Docker
+- `dev` - Executa em modo desenvolvimento
+- `prod` - Executa em modo produção (Docker)
+- `infra up/down` - Gerencia infraestrutura
+- `clean` - Limpa arquivos de build
+- `test` - Executa testes
+- `help` - Mostra ajuda
 
-# Execução em modo desenvolvimento (infraestrutura Docker + app local)
-./scripts/executar-dev.sh
+#### Scripts Específicos (Diretório scripts/)
+```bash
+# Build
+./scripts/build-maven.sh     # ou .ps1
+./scripts/build-docker.sh    # ou .ps1
+
+# Infraestrutura
+./scripts/infra.sh up        # ou .ps1
 
 # Menu interativo e orquestração completa
 ./scripts/start.sh

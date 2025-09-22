@@ -1,136 +1,78 @@
-# Arquivos compilados
-*.class
+# === PROJETO COMPRAE CONFIG-SERVER ===
 
-# Logs
-*.log
-
-# Arquivos temporários
-*.tmp
-*.swp
-*.bak
-
-# Diretórios de build
-/build/
-/target/
-/out/
-
-# Arquivos de pacotes
+# Build outputs
+**/target/
+**/build/
+**/out/
 *.jar
 *.war
 *.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
 
-# Arquivos de configuração de IDEs
-/.idea/
-/*.iml
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+# IDEs and editors
+**/.idea/
+**/.vscode/
+*.iml
 *.ipr
 *.iws
-/.vscode/
-/*.sublime-workspace
-/*.sublime-project
+.project
+.classpath
+.settings/
 
-# BlueJ
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Crash logs da JVM
-hs_err_pid*
-replay_pid*
-
-# Arquivos de ambiente
-.env
-.env.*
-
-# Diretórios do sistema operacional
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Arquivos de dependências
-/node_modules/
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Maven
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 
-# Gradle
-.gradle/
-gradle-app.setting
-!gradle-wrapper.jar
-!gradle-wrapper.properties
+# Spring Boot
+application-local.*
+bootstrap-local.*
 
-# Docker
-.docker/
+# JVM crash logs
+hs_err_pid*
+replay_pid*
 
-# Kubernetes
-*.kubeconfig
-
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-.terraform.lock.hcl
-
-# Arquivos de backup
-*~
-*.orig
-*.backup
-
-# Arquivos de configuração local
-application-local.properties
-application-local.yml
-bootstrap-local.properties
-bootstrap-local.yml
-
-# Certificates e chaves
+# Security files
 *.pem
 *.key
 *.crt
 *.jks
 *.p12
 
-# Bancos de dados locais
+# Database files
 *.db
-*.sqlite
-*.sqlite3
+*.sqlite*
 
-# Coverage reports
-coverage/
-.nyc_output/
-*.lcov
-
-# Test results
+# Test reports
 test-results/
 junit.xml
 TEST-*.xml
+coverage/
 
-# Generated documentation
+# Documentation build
 docs/build/
 site/
-
-# Cache directories
-.cache/
-.parcel-cache/
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Optional npm cache directory
-.npm
-
-# ESLint cache
-.eslintcache
-
-# Yarn
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*

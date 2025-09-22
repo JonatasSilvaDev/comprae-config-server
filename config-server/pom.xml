@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.configsystem</groupId>
 	<artifactId>config-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>config-server</name>
 	<description>Repositório responsável pelo servidor de configuração centralizada do projeto Compraê</description>
 	<url/>
@@ -119,7 +119,41 @@
 			<groupId>com.github.JonatasSilvaDev</groupId>
 			<artifactId>comprae-client-sdk</artifactId>
 			<version>1.1.1</version>
-		</dependency>		
+		</dependency>
+
+		<!-- Observabilidade Avançada -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing-bridge-otel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry</groupId>
+			<artifactId>opentelemetry-exporter-zipkin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>7.4</version>
+		</dependency>
+
+		<!-- Resilience4j para Circuit Breaker e Retry -->
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot3</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-micrometer</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+		<!-- Cache Avançado -->
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>kafka</artifactId>
