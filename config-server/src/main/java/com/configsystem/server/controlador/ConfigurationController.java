@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -203,6 +204,185 @@ public class ConfigurationController {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("status", "ERROR");
             errorResponse.put("message", e.getMessage());
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
+     * Cria uma nova configuração
+     */
+    @PostMapping
+    @Operation(summary = "Criar configuração", 
+               description = "Cria uma nova configuração no sistema")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Configuração criada com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "409", description = "Configuração já existe"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    @Timed(value = "config.create.duration", description = "Time taken to create configuration")
+    public ResponseEntity<com.configsystem.server.dto.ConfigurationCrudResponse> createConfiguration(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados da nova configuração")
+            @jakarta.validation.Valid @RequestBody com.configsystem.server.dto.CreateConfigurationRequest request) {
+        
+        logger.info("POST /configurations - Creating: service={}, key={}, environment={}", 
+                request.getServiceName(), request.getConfigKey(), request.getEnvironment());
+        
+        try {
+            Optional<Configuration> created = configurationService.createConfiguration(
+                request.getServiceName(), 
+                request.getConfigKey(), 
+                request.getConfigValue(),
+                request.getEnvironment(),
+                request.getDescription()
+            );
+            
+            if (created.isPresent()) {
+                Configuration config = created.get();
+                com.configsystem.server.dto.ConfigurationCrudResponse response = 
+                    com.configsystem.server.dto.ConfigurationCrudResponse.success(
+                        config.getId(),
+                        config.getServiceName(),
+                        config.getConfigKey(),
+                        config.getConfigValue(),
+                        config.getEnvironment(),
+                        config.getDescription(),
+                        config.getCreatedAtAsLocalDateTime(),
+                        config.getUpdatedAtAsLocalDateTime(),
+                        "Configuração criada com sucesso"
+                    );
+                
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(com.configsystem.server.dto.ConfigurationCrudResponse.error(
+                        "Configuração já existe para o serviço, chave e ambiente especificados"));
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error creating configuration: service={}, key={}, error={}", 
+                    request.getServiceName(), request.getConfigKey(), e.getMessage(), e);
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(com.configsystem.server.dto.ConfigurationCrudResponse.error(
+                    "Erro interno ao criar configuração: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Atualiza uma configuração existente
+     */
+    @PutMapping("/{serviceName}/{configKey}")
+    @Operation(summary = "Atualizar configuração", 
+               description = "Atualiza uma configuração existente")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Configuração atualizada com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "404", description = "Configuração não encontrada"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    @Timed(value = "config.update.duration", description = "Time taken to update configuration")
+    public ResponseEntity<com.configsystem.server.dto.ConfigurationCrudResponse> updateConfiguration(
+            @Parameter(description = "Nome do serviço")
+            @PathVariable @NotBlank @Pattern(regexp = "^[a-zA-Z0-9-_]+$") String serviceName,
+            
+            @Parameter(description = "Chave da configuração")
+            @PathVariable @NotBlank @Pattern(regexp = "^[a-zA-Z0-9-_.]+$") String configKey,
+            
+            @Parameter(description = "Ambiente da configuração")
+            @RequestParam @NotBlank @Pattern(regexp = "^(dev|test|staging|prod)$") String environment,
+            
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados da configuração")
+            @jakarta.validation.Valid @RequestBody com.configsystem.server.dto.UpdateConfigurationRequest request) {
+        
+        logger.info("PUT /configurations/{}/{} - Updating: environment={}", serviceName, configKey, environment);
+        
+        try {
+            Optional<Configuration> updated = configurationService.updateConfiguration(
+                serviceName, 
+                configKey, 
+                environment,
+                request.getConfigValue(),
+                request.getDescription()
+            );
+            
+            if (updated.isPresent()) {
+                Configuration config = updated.get();
+                com.configsystem.server.dto.ConfigurationCrudResponse response = 
+                    com.configsystem.server.dto.ConfigurationCrudResponse.success(
+                        config.getId(),
+                        config.getServiceName(),
+                        config.getConfigKey(),
+                        config.getConfigValue(),
+                        config.getEnvironment(),
+                        config.getDescription(),
+                        config.getCreatedAtAsLocalDateTime(),
+                        config.getUpdatedAtAsLocalDateTime(),
+                        "Configuração atualizada com sucesso"
+                    );
+                
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error updating configuration: service={}, key={}, environment={}, error={}", 
+                    serviceName, configKey, environment, e.getMessage(), e);
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(com.configsystem.server.dto.ConfigurationCrudResponse.error(
+                    "Erro interno ao atualizar configuração: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Remove uma configuração
+     */
+    @DeleteMapping("/{serviceName}/{configKey}")
+    @Operation(summary = "Remover configuração", 
+               description = "Remove uma configuração do sistema (soft delete)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Configuração removida com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Configuração não encontrada"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    @Timed(value = "config.delete.duration", description = "Time taken to delete configuration")
+    public ResponseEntity<Map<String, String>> deleteConfiguration(
+            @Parameter(description = "Nome do serviço")
+            @PathVariable @NotBlank @Pattern(regexp = "^[a-zA-Z0-9-_]+$") String serviceName,
+            
+            @Parameter(description = "Chave da configuração")
+            @PathVariable @NotBlank @Pattern(regexp = "^[a-zA-Z0-9-_.]+$") String configKey,
+            
+            @Parameter(description = "Ambiente da configuração")
+            @RequestParam @NotBlank @Pattern(regexp = "^(dev|test|staging|prod)$") String environment) {
+        
+        logger.info("DELETE /configurations/{}/{} - Deleting: environment={}", serviceName, configKey, environment);
+        
+        try {
+            boolean deleted = configurationService.deleteConfiguration(serviceName, configKey, environment);
+            
+            Map<String, String> response = new HashMap<>();
+            
+            if (deleted) {
+                response.put("status", "SUCCESS");
+                response.put("message", "Configuração removida com sucesso");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("status", "NOT_FOUND");
+                response.put("message", "Configuração não encontrada");
+                return ResponseEntity.notFound().build();
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error deleting configuration: service={}, key={}, environment={}, error={}", 
+                    serviceName, configKey, environment, e.getMessage(), e);
+            
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "ERROR");
+            errorResponse.put("message", "Erro interno ao remover configuração: " + e.getMessage());
             
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
