@@ -15,7 +15,7 @@ docker-compose -f ../docker-compose.yml down 2>$null
 
 # Iniciar containers
 Write-Host "Iniciando containers..." -ForegroundColor Cyan
-docker-compose -f ../docker-compose.yml up -d
+docker-compose -f ../docker-compose.yml --profile monitoring up -d
 
 # Aguardar aplicacao
 Write-Host "Aguardando aplicacao..." -ForegroundColor Yellow

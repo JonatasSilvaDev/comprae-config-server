@@ -20,12 +20,12 @@ USER configserver
 EXPOSE 8080
 EXPOSE 5005
 
-# Configurações de JVM otimizadas
+# Configurações de JVM otimizadas (padrão)
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseStringDeduplication -Djava.security.egd=file:/dev/./urandom"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
-# Comando de inicialização
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar app.jar"]
+# Comando de inicialização (sem debug fixo)
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
