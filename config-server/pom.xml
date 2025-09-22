@@ -114,11 +114,11 @@
 			<artifactId>postgresql</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- Config Client SDK via Local Install (temporário) -->
+		<!-- Config Client SDK v1.1.1 - Cache inteligente e validação avançada -->
 		 <dependency>
 			<groupId>com.github.JonatasSilvaDev</groupId>
 			<artifactId>comprae-client-sdk</artifactId>
-			<version>1.0.2</version>
+			<version>1.1.1</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.testcontainers</groupId>
