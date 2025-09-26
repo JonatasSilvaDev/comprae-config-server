@@ -7,7 +7,7 @@ try {
     Write-Host "❌ Não foi possível navegar para o diretório config-server" -ForegroundColor Red
     exit 1
 }
-docker build -t comprae/config-server:latest .
+docker build -t comprae-config-server:latest .
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "✅ Imagem comprae/config-server:latest criada com sucesso." -ForegroundColor Green

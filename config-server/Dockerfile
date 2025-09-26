@@ -10,8 +10,9 @@ WORKDIR /app
 # Copiar o JAR pré-compilado
 COPY target/config-server-*.jar app.jar
 
-# Alterar propriedade do arquivo para o usuário criado
-RUN chown configserver:configserver app.jar
+# Criar diretório de logs e alterar propriedades
+RUN mkdir -p logs && \
+    chown -R configserver:configserver app.jar logs
 
 # Configurar usuário não-root
 USER configserver

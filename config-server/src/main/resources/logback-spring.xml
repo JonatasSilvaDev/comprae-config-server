@@ -21,6 +21,7 @@
     <!-- File Appender para logs em arquivo -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/config-server.log</file>
+        <prudent>false</prudent>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/config-server.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
@@ -47,6 +48,7 @@
     <!-- Appender específico para métricas -->
     <appender name="METRICS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/metrics.log</file>
+        <prudent>false</prudent>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/metrics.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
